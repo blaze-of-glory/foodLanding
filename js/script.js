@@ -215,8 +215,7 @@ window.addEventListener('DOMContentLoaded', () => {
         })
     };
     // Отправка данных из формы END
-    // Слайдер
-
+    /* Слайдер v1
     let slideIndex = 1;
     const slides = document.querySelectorAll('.offer__slide'),
         prev = document.querySelector('.offer__slider-prev'),
@@ -262,4 +261,201 @@ window.addEventListener('DOMContentLoaded', () => {
     next.addEventListener('click', function () {
         plusSlides(1);
     });
+     END Слайдер v1*/
+
+    // Слайдер v2
+    const slides = document.querySelectorAll('.offer__slide'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width,
+        slider = document.querySelector('.offer__slider');
+    let slideIndex = 1;
+    let offset = 0;
+
+    const widthConverter = (width) => {
+        return +width.replace(/\D/g, '');
+    }
+    //Добавляем нолик для отображения чисел меньше чем 10 (панель состояния слайдов)
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
+    } else {
+        total.textContent = slides.length;
+        current.textContent = slideIndex;
+    }
+
+    // Задаём ширину, позиционирование и анимацию блока, в котором будут крутиться слайды
+    slidesField.style.width = 100 * slides.length + '%';
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
+
+    //Прячем слайды, которые не являются текущими 
+    slidesWrapper.style.overflow = 'hidden';
+
+    //Делаем так,что бы все слайды были по размеру равны окну показа (влезали целиком)
+    slides.forEach(slide => slide.style.width = width);
+
+    slider.style.position = 'relative';
+    //Создаём точки как элемент списка на странице и массив точек, для их манипуляций в дальнейшем 
+    const indicators = document.createElement('ol'),
+        dots = [];
+    //Добавляем им стили
+    indicators.classList.add('carousel-indicators');
+    //Добавляем на страницу
+    slider.append(indicators);
+    //Создаём точку как элменет списка в зависимости от количества слайдов с дата атрибутом равным её порядковому номеру (в пользовательском представлении),
+    //добавляем стили, выделяем стартовую точку, добавляем точку в  список точек и в массив для дальнейшей манипуляции
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.classList.add('dot');
+        if (i == 0) {
+            dot.style.opacity = 1;
+        }
+        indicators.append(dot);
+        dots.push(dot);
+    }
+    //Создаём обработчик событя, который при нажатии, если ширина отступа ровна колличеству слайдов (долистали в конец), сделает отступ равным 0(вернёт в начало),
+    // инчае просто добавит к отступу ширину другого слайда (перелистнёт на следующий)
+    next.addEventListener('click', () => {
+        if (offset == widthConverter(width) * (slides.length - 1)) {
+            offset = 0;
+        } else {
+            offset += widthConverter(width);
+        }
+        //Непосредственно сам механизм переключения, использующий значение отступа
+        slidesField.style.transform = `translateX(-${offset}px)`;
+        //Изменение номера текущего слайда
+        if (slideIndex == slides.length) {
+            slideIndex = 1;
+        } else {
+            slideIndex++;
+        }
+        //Отображение номера текущего слайда
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+
+        //Затемнение всех точек навигации
+        dots.forEach(dot => dot.style.opacity = '.5');
+        //Выделение активной точки навигации
+        dots[slideIndex - 1].style.opacity = 1;
+    });
+
+    //Создаем обработчик события для отлистывания назад, если отступ 0(находлимся в начале) то добавляет ширины всех слайдов (оказываемся в конце),
+    //если нет, то просто отнимаем ширину одного слайда
+    prev.addEventListener('click', () => {
+        if (offset == 0) {
+            offset = widthConverter(width) * (slides.length - 1);
+        } else {
+            offset -= widthConverter(width);
+        }
+        slidesField.style.transform = `translateX(-${offset}px)`;
+        // Изменение номера текущего слайда
+        if (slideIndex == 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex--;
+        }
+        //Отображение номера текущего слайда
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+        //Затемнение всех точек навигации
+        dots.forEach(dot => dot.style.opacity = '.5');
+        //Выделение активной точки навигации
+        dots[slideIndex - 1].style.opacity = 1;
+    })
+    //Создаем обработчик события для каждой точки в массиве
+    dots.forEach(dot => dot.addEventListener('click', (e) => {
+        //Получаем атрибут точки
+        const slideTo = e.target.getAttribute('data-slide-to');
+        //Делаем переключение сладйда по значению атрибута
+        slideIndex = slideTo;
+        offset = widthConverter(width) * (slideTo - 1);
+        slidesField.style.transform = `translateX(-${offset}px)`;
+        //Отображение текущего слайда
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+        //Затемнение всех точек навигации
+        dots.forEach(dot => dot.style.opacity = '.5');
+        //Выделение активной точки навигации
+        dots[slideIndex - 1].style.opacity = 1;
+    }))
+    //END Слайдер v2
+
+    //Калькулятор 
+
+    const result = document.querySelector('.calculating__result span');
+    let gender = 'female',
+        height, weight, age, ratio = 1.375;
+
+    function calcTotal() {
+        if (!gender || !height || !weight || !age || !ratio) {
+            result.textContent = "____";
+            return;
+        }
+        if (gender === 'female') {
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+        } else {
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+        }
+    }
+    calcTotal();
+
+    function getStaticInformation(parentSelector, activeClass) {
+        const elements = document.querySelectorAll(`${parentSelector} div`);
+        elements.forEach(elem => elem.addEventListener('click', (e) => {
+            if (e.target.getAttribute('data-ratio')) {
+                ratio = +e.target.getAttribute('data-ratio');
+            } else {
+                gender = e.target.getAttribute('id');
+            }
+            console.log(ratio, gender);
+            elements.forEach(elem => elem.classList.remove(activeClass));
+            e.target.classList.add(activeClass);
+            calcTotal();
+        }))
+    }
+    getStaticInformation('#gender', 'calculating__choose-item_active');
+    getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+
+    function getDynamicInformation(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+            switch (input.getAttribute('id')) {
+                case 'height':
+                    height = +input.value;
+                    break;
+                case 'weight':
+                    weight = +input.value;
+                    break;
+                case 'age':
+                    age = +input.value;
+                    break;
+
+            }
+            calcTotal();
+        })
+    }
+    getDynamicInformation('#height');
+    getDynamicInformation('#weight');
+    getDynamicInformation('#age');
+    //Калькулятор END
+
+
+
+
 })
