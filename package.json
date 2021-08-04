@@ -1,0 +1,24 @@
+{
+  "name": "foodLanding",
+  "version": "1.0.0",
+  "description": "Landing page of food delivery. Made in the process of learning JS.  Available on GitHub pages.",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blaze-of-glory/foodLanding.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blaze-of-glory/foodLanding/issues"
+  },
+  "homepage": "https://github.com/blaze-of-glory/foodLanding#readme",
+  "devDependencies": {
+    "webpack": "^5.46.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
