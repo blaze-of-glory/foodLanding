@@ -1,5 +1,4 @@
 function timer(id, deadline) {
-    /* Реализация таймера */
 
     function getTime(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -48,6 +47,5 @@ function timer(id, deadline) {
         }
     }
     setTime(id, deadline);
-    /* Реализация таймера END*/
 }
 export default timer;

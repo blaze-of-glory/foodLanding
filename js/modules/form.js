@@ -1,5 +1,5 @@
 function form() {
-    // Отправка данных из формы
+
     const forms = document.querySelectorAll('form');
     forms.forEach(item => {
         postForm(item);
@@ -36,7 +36,6 @@ function form() {
             })
         })
     };
-    // Отправка данных из формы END
 }
 
 export default form;

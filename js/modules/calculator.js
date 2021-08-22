@@ -1,5 +1,4 @@
 function calculator() {
-    //Калькулятор 
 
     const result = document.querySelector('.calculating__result span');
     let gender, height, weight, age, ratio;
@@ -94,7 +93,6 @@ function calculator() {
     getDynamicInformation('#height');
     getDynamicInformation('#weight');
     getDynamicInformation('#age');
-    //Калькулятор END
 }
 
 export default calculator;

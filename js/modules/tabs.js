@@ -1,5 +1,4 @@
 function tabs() {
-    /* Реализация табов */
     const tabs = document.querySelectorAll('.tabheader__item');
     const tabContent = document.querySelectorAll('.tabcontent');
     const tabParent = document.querySelector('.tabheader__items');
@@ -35,7 +34,6 @@ function tabs() {
             })
         }
     })
-    /* Реализация табов END*/
 }
 
 export default tabs;

@@ -1,5 +1,5 @@
 function cards() {
-    /* Реализация карточек через классы */
+
     class MenuCard {
         constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
@@ -60,7 +60,6 @@ function cards() {
         '.menu .container',
         "menu__item"
     ).render();
-    /* Реализация карточек через классы  END */
 }
 
 export default cards;
